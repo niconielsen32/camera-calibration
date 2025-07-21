@@ -39,12 +39,14 @@ def capture_calibration_images():
     while True:
         # Capture frame
         ret, frame = cap.read()
+        og_frame = frame.copy() # save original image to calibrate
         
         if not ret:
             print("Error: Failed to capture image")
             break
         
         # Convert to grayscale for chessboard detection
+
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         
         # Find chessboard corners
@@ -76,7 +78,7 @@ def capture_calibration_images():
         elif key == ord('c'):
             # Save the image
             img_name = os.path.join(OUTPUT_DIRECTORY, f"calibration_{img_counter:02d}.jpg")
-            cv2.imwrite(img_name, frame)
+            cv2.imwrite(img_name, og_frame)
             print(f"Captured {img_name}")
             
             img_counter += 1
