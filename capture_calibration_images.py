@@ -40,14 +40,15 @@ def capture_calibration_images():
     # Counter for captured images
     img_counter = 0
     
-    print("Press 'c' to capture an image")
+    print("Press 'c' to capture an image if a chess board is detected")
     print("Press 'q' or Escape to quit")
     print(f"Images will be saved to {OUTPUT_DIRECTORY}")
     
     while True:
         # Capture frame
-        ret, frame = cap.read()
-        
+        ret, orig_frame = cap.read()
+        # Make a copy of the frame we can modify and display
+        frame = orig_frame.copy()
         if not ret:
             print("Error: Failed to capture image")
             break
@@ -81,10 +82,10 @@ def capture_calibration_images():
             break
         
         # 'c' to capture
-        elif key == ord('c'):
-            # Save the image
-            img_name = os.path.join(OUTPUT_DIRECTORY, f"calibration_{img_counter:02d}.jpg")
-            cv2.imwrite(img_name, frame)
+        elif key == ord('c') and ret_chess:
+            # Save the image if a chess board is detected
+            img_name = os.path.join(OUTPUT_DIRECTORY, f"calibration_{img_counter:02d}.png")
+            cv2.imwrite(img_name, orig_frame)
             print(f"Captured {img_name}")
             
             img_counter += 1
